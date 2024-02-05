@@ -140,7 +140,7 @@ const converseChangeFaceAgain = function(cube, a1, a2, a3, a4) {
   cube[a1] = num;
 };
 
-const converseToPaperType = function(cubeOutputDataDebug) {
+const converseToPaperType = function(cubeOutputDataDebug: Uint8Array) {
   const array = new Uint8Array(55);
   let num = 0;
   const array2 = new Uint8Array(8);
@@ -291,7 +291,7 @@ const converseToPaperType = function(cubeOutputDataDebug) {
   return array;
 };
 
-const cubeDataMixDecode = function(mixData) {
+const cubeDataMixDecode = function(mixData: DataView) {
   const array = new Uint8Array(20);
   const array2 = [
     80,
@@ -353,7 +353,7 @@ const cubeDataMixDecode = function(mixData) {
   return array;
 };
 
-export const parseCube = bytes => {
+export const parseCube = (bytes: DataView) => {
   const mixerDataDecoded = cubeDataMixDecode(bytes);
   const paperTypeCube = converseToPaperType(mixerDataDecoded);
   return Array.from(paperTypeCube).slice(1);
