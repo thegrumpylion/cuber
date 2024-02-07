@@ -10,14 +10,12 @@ const Cube: FC<CubeProps> = ({ state }) => {
   const imgContainer = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log('state:', state);
     if (imgContainer.current) {
       imgContainer.current.innerHTML = '';
       SRVisualizer.cubeSVG(
         imgContainer.current,
-        //        `visualcube.php?fmt=svg&r=x-90y-120x-20&size=300&fc=${state}`
         {
-          facelets: state
+          facelets: state,
         }
       );
     }

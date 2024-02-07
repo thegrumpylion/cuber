@@ -8,7 +8,8 @@ import {
   disconnectFromBluetoothDevice
 } from './helpers/bluetooth';
 
-const faceColorMap = ['l', 'l', 'l', 'l', 'l', 'l'];
+// b = green, u = yellow, r = red, d = white, l = orange, f = blue
+const faceColorMap = ['b', 'u', 'r', 'd', 'l', 'f'];
 
 export const useBluetooth = () => {
   const [cubeState, setCubeState] = useState<string[]>([]);

@@ -13,6 +13,10 @@ const App = () => {
 
   const { time, events, start, stop, recordEvent, formatTime } = useTimer();
 
+  const reset = () => {
+    stop()
+    stateMachine.reset()
+  }
 
   useEffect(() => {
     if (stateMachine.process(cubeState)) {
@@ -36,7 +40,7 @@ const App = () => {
       <div>
         <div>Timer: {formatTime(time)}</div>
         <button onClick={start}>Start</button>
-        <button onClick={stop}>Stop</button>
+        <button onClick={reset}>Stop</button>
         <div>
           {events.map((event, index) => (
             <div key={index}>
