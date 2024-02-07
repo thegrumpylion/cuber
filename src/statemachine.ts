@@ -12,16 +12,16 @@ export class StateMachine {
     this.currentStateIndex = 0;
   }
 
-  private checkState(inputString: string, state: State): boolean {
+  private checkState(inputString: string[], state: State): boolean {
     for (const [pos, expectedChar] of state.positions) {
-      if (inputString.charAt(pos) !== expectedChar) {
+      if (inputString[pos] !== expectedChar) {
         return false;
       }
     }
     return true;
   }
 
-  public process(inputChar: string): boolean {
+  public process(inputChar: string[]): boolean {
     if (this.currentStateIndex < this.states.length) {
       const state = this.states[this.currentStateIndex];
       if (this.checkState(inputChar, state)) {

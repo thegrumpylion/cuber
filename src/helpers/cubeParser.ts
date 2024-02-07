@@ -1,4 +1,4 @@
-const converseAngleSetSingleXfirst = function(cube, angleFace, p1, p2, p3, c1, c2, c3) {
+const converseAngleSetSingleXfirst = function(cube: Uint8Array, angleFace: number, p1: number, p2: number, p3: number, c1: number, c2: number, c3: number) {
   let result = 0;
   if (angleFace === 1) {
     cube[p1] = c3;
@@ -18,7 +18,7 @@ const converseAngleSetSingleXfirst = function(cube, angleFace, p1, p2, p3, c1, c
   return result;
 };
 
-const converseAngleSetSingleYfirst = function(cube, angleFace, p1, p2, p3, c1, c2, c3) {
+const converseAngleSetSingleYfirst = function(cube: Uint8Array, angleFace: number, p1: number, p2: number, p3: number, c1: number, c2: number, c3: number) {
   let result = 0;
   if (angleFace === 2) {
     cube[p1] = c3;
@@ -38,7 +38,7 @@ const converseAngleSetSingleYfirst = function(cube, angleFace, p1, p2, p3, c1, c
   return result;
 };
 
-const converseAngleSetXfirst = function(cube, angle, angleFace, f1, f2, f3) {
+const converseAngleSetXfirst = function(cube: Uint8Array, angle: number, angleFace: number, f1: number, f2: number, f3: number) {
   let num = 0;
   if (angle === 1) {
     num |= converseAngleSetSingleXfirst(cube, angleFace, f1, f2, f3, 1, 2, 3);
@@ -62,7 +62,7 @@ const converseAngleSetXfirst = function(cube, angle, angleFace, f1, f2, f3) {
   return num;
 };
 
-const converseAngleSetYfirst = function(cube, angle, angleFace, f1, f2, f3) {
+const converseAngleSetYfirst = function(cube: Uint8Array, angle: number, angleFace: number, f1: number, f2: number, f3: number) {
   let num = 0;
   if (angle === 1) {
     num |= converseAngleSetSingleYfirst(cube, angleFace, f1, f2, f3, 1, 2, 3);
@@ -86,7 +86,7 @@ const converseAngleSetYfirst = function(cube, angle, angleFace, f1, f2, f3) {
   return num;
 };
 
-const converseLineSetSingle = function(cube, lineFace, p1, p2, c1, c2) {
+const converseLineSetSingle = function(cube: Uint8Array, lineFace: number, p1: number, p2: number, c1: number, c2: number) {
   let result = 0;
   if (lineFace === 1) {
     cube[p1] = c1;
@@ -100,7 +100,7 @@ const converseLineSetSingle = function(cube, lineFace, p1, p2, c1, c2) {
   return result;
 };
 
-const converseLineSet = function(cube, line, lineFace, p1, p2) {
+const converseLineSet = function(cube: Uint8Array, line: number, lineFace: number, p1: number, p2: number) {
   let num = 0;
   if (line === 1) {
     num |= converseLineSetSingle(cube, lineFace, p1, p2, 1, 2);
@@ -132,7 +132,7 @@ const converseLineSet = function(cube, line, lineFace, p1, p2) {
   return num;
 };
 
-const converseChangeFaceAgain = function(cube, a1, a2, a3, a4) {
+const converseChangeFaceAgain = function(cube: Uint8Array, a1: number, a2: number, a3: number, a4: number) {
   const num = cube[a4];
   cube[a4] = cube[a3];
   cube[a3] = cube[a2];
@@ -291,7 +291,7 @@ const converseToPaperType = function(cubeOutputDataDebug: Uint8Array) {
   return array;
 };
 
-const cubeDataMixDecode = function(mixData: DataView) {
+const cubeDataMixDecode = function(mixData: DataView): Uint8Array {
   const array = new Uint8Array(20);
   const array2 = [
     80,
@@ -332,10 +332,10 @@ const cubeDataMixDecode = function(mixData: DataView) {
     215
   ];
   if (mixData.byteLength !== 20) {
-    return mixData;
+    return Uint8Array.from(array);
   }
   if (mixData.getUint8(18) !== 167) {
-    return mixData;
+    return Uint8Array.from(array);
   }
   let b = mixData.getUint8(19);
   b &= 15;

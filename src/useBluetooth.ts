@@ -8,10 +8,10 @@ import {
   disconnectFromBluetoothDevice
 } from './helpers/bluetooth';
 
-const faceColorMap = ['g', 'y', 'r', 'w', 'o', 'b'];
+const faceColorMap = ['l', 'l', 'l', 'l', 'l', 'l'];
 
 export const useBluetooth = () => {
-  const [cubeState, setCubeState] = useState('boygrwbbbboygrwoooboygrwyyyboygrwgggrrrrrrrrrboygrwwww');
+  const [cubeState, setCubeState] = useState<string[]>([]);
   const [device, setDevice] = useState<BluetoothDevice | null>(null);
 
   useEffect(() => {
@@ -39,7 +39,6 @@ export const useBluetooth = () => {
           const value = characteristic.value;
           const newCubeState = parseCube(value)
             .map((faceletColor) => faceColorMap[faceletColor - 1])
-            .join('');
           setCubeState(newCubeState);
         }
       });

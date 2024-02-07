@@ -1,26 +1,31 @@
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import * as SRVisualizer from 'sr-visualizer';
 
 interface CubeProps {
-  state: string
+  state: string[]
 }
 
 const Cube: FC<CubeProps> = ({ state }) => {
 
+  const imgContainer = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    const imgContainer = document.querySelector('#imageContainer') as HTMLDivElement;
-    if (imgContainer) {
-      imgContainer.innerHTML = '';
+    console.log('state:', state);
+    if (imgContainer.current) {
+      imgContainer.current.innerHTML = '';
       SRVisualizer.cubeSVG(
-        imgContainer,
-        `visualcube.php?fmt=svg&r=x-90y-120x-20&size=300&fc=${state}`
+        imgContainer.current,
+        //        `visualcube.php?fmt=svg&r=x-90y-120x-20&size=300&fc=${state}`
+        {
+          facelets: state
+        }
       );
     }
   }, [state])
 
   return (
     <div>
-      <div id="imageContainer"></div>
+      <div ref={imgContainer}></div>
     </div>
   );
 }
