@@ -1,11 +1,18 @@
-import { useState, useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
-const Timer = forwardRef((props, ref) => {
+type EventRecord = {
+  description: string;
+  time: number;
+};
+
+export const useTimer = () => {
   const [time, setTime] = useState(0);
+  const [events, setEvents] = useState<EventRecord[]>([]);
   const intervalRef = useRef<number | null>(null);
 
   const start = () => {
-    setTime(0);
+    setTime(0); // Reset time to 0 before starting
+    setEvents([]); // Clear previous events
     if (intervalRef.current !== null) return; // Prevent multiple intervals
 
     intervalRef.current = window.setInterval(() => {
@@ -20,10 +27,10 @@ const Timer = forwardRef((props, ref) => {
     }
   };
 
-  useImperativeHandle(ref, () => ({
-    start,
-    stop
-  }));
+  const recordEvent = (description: string) => {
+    const event = { description, time };
+    setEvents((prevEvents) => [...prevEvents, event]);
+  };
 
   const formatTime = (time: number) => {
     const milliseconds = `0${(time % 1000) / 10}`.slice(-2);
@@ -38,9 +45,5 @@ const Timer = forwardRef((props, ref) => {
     };
   }, []);
 
-  return (
-    <div>Timer: {formatTime(time)}</div>
-  );
-});
-
-export default Timer;
+  return { time, events, start, stop, recordEvent, formatTime };
+};

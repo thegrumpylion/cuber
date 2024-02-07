@@ -3,7 +3,7 @@ interface State {
   positions: Map<number, string>;
 }
 
-class StateMachine {
+export class StateMachine {
   private states: State[];
   private currentStateIndex: number;
 
@@ -45,7 +45,7 @@ class StateMachine {
   }
 }
 
-const states: State[] = [
+export const states: State[] = [
   {
     name: 'cross',
     positions: new Map([

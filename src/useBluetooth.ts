@@ -11,7 +11,7 @@ import {
 const faceColorMap = ['g', 'y', 'r', 'w', 'o', 'b'];
 
 export const useBluetooth = () => {
-  const [cubeState, setCubeState] = useState('bbbbbbbbboooooooooyyyyyyyyygggggggggrrrrrrrrrwwwwwwwww');
+  const [cubeState, setCubeState] = useState('boygrwbbbboygrwoooboygrwyyyboygrwgggrrrrrrrrrboygrwwww');
   const [device, setDevice] = useState<BluetoothDevice | null>(null);
 
   useEffect(() => {
