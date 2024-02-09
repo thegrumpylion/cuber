@@ -3,6 +3,7 @@ import { cubeSVG } from 'sr-visualizer';
 
 interface CubeProps {
   state: string[]
+  planView?: boolean
 }
 
 const reverseTransform = (state: string[]): string[] => {
@@ -60,7 +61,7 @@ const xiaomiMapper = (state: string[]): string[] => {
 }
 
 
-const Cube: FC<CubeProps> = ({ state }) => {
+const Cube: FC<CubeProps> = ({ state, planView }) => {
 
   const imgContainer = useRef<HTMLDivElement>(null);
 
@@ -71,11 +72,13 @@ const Cube: FC<CubeProps> = ({ state }) => {
         imgContainer.current,
         {
           facelets: xiaomiMapper(state),
-          view: "plan",
+          view: planView ? 'plan' : undefined,
+          height: 300,
+          width: 300,
         }
       );
     }
-  }, [state])
+  }, [state, planView])
 
   return (
     <div ref={imgContainer}></div>
