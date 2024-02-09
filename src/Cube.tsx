@@ -1,9 +1,91 @@
 import { FC, useEffect, useRef } from 'react'
-import { cubeSVG, Face } from 'sr-visualizer';
+import { Axis, cubeSVG } from 'sr-visualizer';
 
 interface CubeProps {
   state: string[]
 }
+
+const state = [
+  'f', 'f', 'f', 'f', 'f', 'f', 'l', 'l', 'l',
+  'b', 'l', 'l', 'b', 'l', 'l', 'b', 'l', 'l',
+  'u', 'u', 'u', 'u', 'u', 'u', 'u', 'u', 'u',
+  'r', 'r', 'r', 'b', 'b', 'b', 'b', 'b', 'b',
+  'r', 'r', 'f', 'r', 'r', 'f', 'r', 'r', 'f',
+  'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd'
+]
+const mapped = [
+  'u', 'u', 'u', 'u', 'u', 'u', 'u', 'u', 'u',
+  'r', 'r', 'r', 'r', 'r', 'r', 'f', 'f', 'f',
+  'l', 'l', 'l', 'f', 'f', 'f', 'f', 'f', 'f',
+  'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd',
+  'l', 'l', 'l', 'l', 'l', 'l', 'b', 'b', 'b',
+  'r', 'r', 'r', 'b', 'b', 'b', 'b', 'b', 'b'
+]
+
+const reverseTransform = (): ((state: string[]) => string[]) => {
+  return (state: string[]): string[] => {
+    return state.reverse();
+  }
+}
+
+const columnTransform = (reverse: boolean): ((state: string[]) => string[]) => {
+  return (state: string[]): string[] => {
+    const out = Array(9).fill('');
+    const indexes = [2, 5, 8, 1, 4, 7, 0, 3, 6];
+    for (let i = 0; i < 9; i++) {
+      out[i] = state[indexes[i]];
+    }
+    console.log("columnTransform state", out);
+    if (reverse) {
+      console.log("columnTransform reverse", out.reverse());
+      return out.reverse();
+    }
+    console.log("columnTransform out", out);
+    return out;
+  }
+}
+
+
+const xiomiMappings: Record<number, { f: number, t: (state: string[]) => string[] }> = {
+  0: {
+    f: 2, // reverse
+    t: reverseTransform(),
+  },
+  1: {
+    f: 4, // 3,6,9 2,5,8 1,4,7
+    t: columnTransform(true)
+  },
+  2: {
+    f: 0, // reverse
+    t: reverseTransform(),
+  },
+  3: {
+    f: 5, // no transformation
+    t: (state: string[]): string[] => state
+  },
+  4: {
+    f: 1, // 7,4,1 8,5,2 9,6,3
+    t: columnTransform(true)
+  },
+  5: {
+    f: 3, // no transformation
+    t: (state: string[]): string[] => state
+  },
+}
+
+const xiaomiMapper = (state: string[]): string[] => {
+  const out = Array(54).fill('');
+  for (let i = 0; i < 6; i++) {
+    const mapping = xiomiMappings[i];
+    const face = state.slice(i * 9, (i + 1) * 9);
+    const transformed = mapping.t(face);
+    for (let j = 0; j < 9; j++) {
+      out[mapping.f * 9 + j] = transformed[j];
+    }
+  }
+  return out;
+}
+
 
 const Cube: FC<CubeProps> = ({ state }) => {
 
@@ -12,54 +94,26 @@ const Cube: FC<CubeProps> = ({ state }) => {
   useEffect(() => {
     if (imgContainer.current) {
       imgContainer.current.innerHTML = '';
+      console.log("state", state);
+      console.log("mapped", xiaomiMapper(state));
       cubeSVG(
         imgContainer.current,
         {
-          // facelets: mapper(state),
-          facelets: [
-            "u", "u", "u", "u", "u", "u", "u", "u", "u",
-            "u", "r", "r", "r", "r", "r", "r", "r", "r",
-            "f", "f", "f", "f", "f", "f", "f", "f", "f",
-            "d", "d", "d", "d", "d", "d", "d", "d", "d",
-            "l", "l", "l", "l", "l", "l", "l", "l", "l",
-            "b", "b", "b", "b", "b", "b", "b", "b", "b"]
+          facelets: xiaomiMapper(state),
+          // viewportRotations: [
+          //   [Axis.X, 0],
+          //   [Axis.Y, 130],
+          //   [Axis.Z, 0],
+          // ],
         }
       );
     }
   }, [state])
 
   return (
-    <div>
-      <div ref={imgContainer}></div>
-    </div>
+    <div ref={imgContainer}></div>
   );
 }
 
-// default: U -> yellow, R -> red, F -> blue, D-> white, L -> orange, B -> green
-// xiaomi : U -> blue, R -> orange, F -> yellow, D -> green, L -> red, B -> white
-const xiaomiMapper: Record<Face, { face: Face, reverse: boolean }> = {
-  [Face.U]: { face: Face.F, reverse: false },
-  [Face.R]: { face: Face.L, reverse: true },
-  [Face.F]: { face: Face.U, reverse: true },
-  [Face.D]: { face: Face.B, reverse: false },
-  [Face.L]: { face: Face.R, reverse: true },
-  [Face.B]: { face: Face.D, reverse: true }
-}
-
-const mapper = (state: string[]): string[] => {
-  const out = Array(54).fill('x');
-  // loop Face enum
-  for (let i = 0; i < 6; i++) {
-    const face = i as Face;
-    const { face: newFace, reverse } = xiaomiMapper[face];
-    // loop facelets
-    for (let j = 0; j < 9; j++) {
-      const oldIndex = face * 9 + j;
-      const newIndex = newFace * 9 + (reverse ? 8 - j : j);
-      out[newIndex] = state[oldIndex];
-    }
-  }
-  return out;
-}
 
 export default Cube;
