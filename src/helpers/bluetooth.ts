@@ -17,6 +17,21 @@ export const connectToBluetoothDevice = async (): Promise<[BluetoothDevice, Blue
   return [device, server];
 };
 
+export const getPairedDevices = async (): Promise<void> => {
+  try {
+    const devices = await navigator.bluetooth.getDevices();
+    console.log(devices); // Logs an array of BluetoothDevice objects
+    // You can iterate over the devices array to access individual device properties
+    devices.forEach(device => {
+      console.log(`Device name: ${device.name}`);
+      console.log(`Device id: ${device.id}`);
+      // other properties and methods
+    });
+  } catch (error) {
+    console.error(error); // Handle errors (e.g., user didn't grant permission)
+  }
+}
+
 export const startNotifications = async (server: BluetoothRemoteGATTServer): Promise<BluetoothRemoteGATTCharacteristic> => {
   const service = await server.getPrimaryService(SERVICE_UUID);
   const characteristic = await service.getCharacteristic(CHARACTERISTIC_UUID);

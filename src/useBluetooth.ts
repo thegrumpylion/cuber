@@ -5,7 +5,8 @@ import {
   connectToBluetoothDevice,
   startNotifications,
   isWebBluetoothSupported,
-  disconnectFromBluetoothDevice
+  disconnectFromBluetoothDevice,
+  getPairedDevices
 } from './helpers/bluetooth';
 
 // b = green, u = yellow, r = red, d = white, l = orange, f = blue
@@ -29,6 +30,22 @@ export const useBluetooth = () => {
       return;
     }
 
+    const transposeCubeColors = (parsedCube: number[]): string[] => {
+      const colorMap: Record<number, string> = {
+        1: 'b', // Green -> 'b'
+        2: 'u', // Yellow -> 'u'
+        3: 'r', // Red -> 'r'
+        4: 'd', // White -> 'd'
+        5: 'l', // Orange -> 'l'
+        6: 'f', // Blue -> 'f'
+      };
+
+      // Convert each number in the parsedCube array to the corresponding character
+      return parsedCube.map(faceletColor => colorMap[faceletColor]);
+    }
+
+    await getPairedDevices();
+
     try {
       const [connectedDevice, server] = await connectToBluetoothDevice();
       setDevice(connectedDevice);
@@ -39,8 +56,8 @@ export const useBluetooth = () => {
         if (characteristic && characteristic.value) {
           const value = characteristic.value;
           const newCubeState = parseCube(value)
-            .map((faceletColor) => faceColorMap[faceletColor - 1])
-          setCubeState(newCubeState);
+          //  .map((faceletColor) => faceColorMap[faceletColor - 1])
+          setCubeState(transposeCubeColors(newCubeState))
         }
       });
 
