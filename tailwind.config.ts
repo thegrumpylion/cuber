@@ -1,0 +1,16 @@
+import type { Config } from 'tailwindcss'
+import ariaComponentsPlugin from 'tailwindcss-react-aria-components'
+
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [
+    ariaComponentsPlugin,
+  ],
+} satisfies Config
+
