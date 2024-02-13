@@ -27,7 +27,7 @@ const columnTransformReverse = (state: string[]): string[] => {
   for (let i = 0; i < 9; i++) {
     out[i] = state[indexes[i]];
   }
-  // out.reverse();
+  out.reverse();
   return out
 }
 
@@ -37,8 +37,8 @@ const xiomiMappings: Record<number, { f: number, t: (state: string[]) => string[
     t: reverseTransform,
   },
   1: {
-    f: 4, // 3,6,9,2,5,8,1,4,7
-    t: columnTransform
+    f: 4, // 7,4,1,8,5,2,9,6,3
+    t: columnTransformReverse
   },
   2: {
     f: 0, // reverse
@@ -50,7 +50,7 @@ const xiomiMappings: Record<number, { f: number, t: (state: string[]) => string[
   },
   4: {
     f: 1, // 3,6,9,2,5,8,1,4,7
-    t: columnTransformReverse
+    t: columnTransform
   },
   5: {
     f: 3, // no transformation
@@ -88,10 +88,13 @@ const Cube: FC<CubeProps> = ({ state, planView }) => {
   useEffect(() => {
     if (imgContainer.current) {
       imgContainer.current.innerHTML = '';
+      console.log("state", state);
+      console.log("mapped", xiaomiMapper(state));
       cubeSVG(
         imgContainer.current,
         {
           facelets: xiaomiMapper(state),
+          // facelets: state,
           view: planView ? 'plan' : undefined,
           height: 300,
           width: 300,
